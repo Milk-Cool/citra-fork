@@ -26,7 +26,7 @@ struct PacketHeader {
 
 constexpr u32 CURRENT_VERSION = 1;
 constexpr u32 MIN_PACKET_SIZE = sizeof(PacketHeader);
-constexpr u32 MAX_PACKET_DATA_SIZE = 32;
+constexpr u32 MAX_PACKET_DATA_SIZE = 1024;
 constexpr u32 MAX_PACKET_SIZE = MIN_PACKET_SIZE + MAX_PACKET_DATA_SIZE;
 constexpr u32 MAX_READ_SIZE = MAX_PACKET_DATA_SIZE;
 
