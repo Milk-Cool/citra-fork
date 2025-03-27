@@ -4,7 +4,7 @@ import enum
 import socket
 
 CURRENT_REQUEST_VERSION = 1
-MAX_REQUEST_DATA_SIZE = 1024
+MAX_REQUEST_DATA_SIZE = 128
 MAX_PACKET_SIZE = 48
 
 class RequestType(enum.IntEnum):
