@@ -560,6 +560,9 @@ struct Values {
     std::string audio_encoder;
     std::string audio_encoder_options;
     u64 audio_bitrate;
+
+    // Scripting
+    Setting<u16> rpcserver_port{45987, "rpcserver_port"};
 };
 
 extern Values values;

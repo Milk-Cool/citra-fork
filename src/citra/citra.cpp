@@ -70,6 +70,7 @@ static void PrintHelp(const char* argv0) {
     std::cout << "Usage: " << argv0
               << " [options] <filename>\n"
                  "-g, --gdbport=NUMBER Enable gdb stub on port NUMBER\n"
+                 "-u, --udpport=NUMBER Change UDP RPC server port NUMBER\n"
                  "-i, --install=FILE    Installs a specified CIA file\n"
                  "-m, --multiplayer=nick:password@address:port"
                  " Nickname, password, address and port for multiplayer\n"
@@ -191,6 +192,7 @@ int main(int argc, char** argv) {
     int option_index = 0;
     bool use_gdbstub = Settings::values.use_gdbstub.GetValue();
     u32 gdb_port = static_cast<u32>(Settings::values.gdbstub_port.GetValue());
+    u32 udp_port = 45987;
     std::string movie_record;
     std::string movie_record_author;
     std::string movie_play;
@@ -217,6 +219,7 @@ int main(int argc, char** argv) {
 
     static struct option long_options[] = {
         {"gdbport", required_argument, 0, 'g'},
+        {"udpport", required_argument, 0, 'u'},
         {"install", required_argument, 0, 'i'},
         {"multiplayer", required_argument, 0, 'm'},
         {"movie-record", required_argument, 0, 'r'},
@@ -230,7 +233,7 @@ int main(int argc, char** argv) {
     };
 
     while (optind < argc) {
-        int arg = getopt_long(argc, argv, "g:i:m:r:p:fhv", long_options, &option_index);
+        int arg = getopt_long(argc, argv, "g:u:i:m:r:p:fhv", long_options, &option_index);
         if (arg != -1) {
             switch (static_cast<char>(arg)) {
             case 'g':
@@ -241,6 +244,16 @@ int main(int argc, char** argv) {
                     errno = EINVAL;
                 if (errno != 0) {
                     perror("--gdbport");
+                    exit(1);
+                }
+                break;
+            case 'u':
+                errno = 0;
+                udp_port = strtoul(optarg, &endarg, 0);
+                if (endarg == optarg)
+                    errno = EINVAL;
+                if (errno != 0) {
+                    perror("--udpport");
                     exit(1);
                 }
                 break;
@@ -350,6 +363,8 @@ int main(int argc, char** argv) {
     // Apply the command line arguments
     Settings::values.gdbstub_port = gdb_port;
     Settings::values.use_gdbstub = use_gdbstub;
+    Settings::values.rpcserver_port = udp_port;
+
     system.ApplySettings();
 
     // Register frontend applets

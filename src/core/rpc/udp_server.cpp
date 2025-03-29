@@ -8,6 +8,7 @@
 #include "common/logging/log.h"
 #include "core/rpc/packet.h"
 #include "core/rpc/udp_server.h"
+#include "common/settings.h"
 
 namespace Core::RPC {
 
@@ -16,7 +17,7 @@ public:
     explicit Impl(std::function<void(std::unique_ptr<Packet>)> new_request_callback)
         // Use a random high port
         // TODO: Make configurable or increment port number on failure
-        : socket(io_context, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), 45987)),
+        : socket(io_context, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), Settings::values.rpcserver_port.GetValue())),
           new_request_callback(std::move(new_request_callback)) {
 
         StartReceive();
